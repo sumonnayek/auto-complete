@@ -23,7 +23,7 @@ export class AutoComplete extends Component {
 
     this.setState({
       filteredCountries,
-      enteredValue: e.currentTarget.value,
+      enteredValue,
       showCountry: true
     });
   };
