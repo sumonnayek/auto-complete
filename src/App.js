@@ -1,24 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import AutoComplete from "./components/AutoComplete";
 
 function App() {
+  let countries = [
+    "India",
+    "England",
+    "Australia",
+    "US",
+    "SA",
+    "Canada",
+    "Indonasia",
+    "China",
+    "Ireland",
+    "Iran"
+  ];
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <AutoComplete
+        countries={countries}
+      />
     </div>
   );
 }
