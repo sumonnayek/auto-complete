@@ -67,7 +67,8 @@ export class AutoComplete extends Component {
               onChange={this.onChange}
               className="form-control"
               type="text"
-              value={enteredValue}/>
+              value={enteredValue}
+              onBlur={this.hideList}/>
           {countryList}
         </div>
     );
