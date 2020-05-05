@@ -44,7 +44,7 @@ export class AutoComplete extends Component {
     const { filteredCountries, enteredValue, showCountry } = this.state;
     let countryList;
 
-    if (filteredCountries && enteredValue) {
+    if (filteredCountries && showCountry && enteredValue) {
       countryList = (
         <ul className="listContainer">
           {filteredCountries.map(country => {
