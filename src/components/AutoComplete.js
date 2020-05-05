@@ -17,7 +17,7 @@ export class AutoComplete extends Component {
           .then(response => response.json())
           .then(data => {
             this.setState({
-              filteredCountries: data.map( obj => obj.name),
+              filteredCountries: data.map(obj => obj.name),
               showCountry: true
             });
           })
@@ -52,33 +52,24 @@ export class AutoComplete extends Component {
     const { filteredCountries, enteredValue, showCountry } = this.state;
     let countryList;
     
-    if (filteredCountries && showCountry && enteredValue) {
+    if (filteredCountries.length && enteredValue) {
       countryList = (
-          <ul className="listContainer">
-            {filteredCountries.map((country, index) => {
-              return (
-                  <li key={index} onClick={this.onClick}>
-                    {country}
-                  </li>
-              );
-            })}
+          <ul className={`dropdown-menu ${showCountry ? 'show' : ''}`}>
+            {filteredCountries.map((country, index) => <li key={index} onClick={this.onClick} className="dropdown-item">{country}</li>)}
           </ul>
       );
     }
     
     return (
-        <>
-          <div className="search-container">
-            <input
-                ref={this.inputRef}
-                onChange={this.onChange}
-                className="search-box1"
-                type="text"
-                value={enteredValue}
-                onBlur={this.hideList}/>
-          </div>
+        <div className="search-container dropdown">
+          <input
+              ref={this.inputRef}
+              onChange={this.onChange}
+              className="search-box1"
+              type="text"
+              value={enteredValue}/>
           {countryList}
-        </>
+        </div>
     );
   }
 }
