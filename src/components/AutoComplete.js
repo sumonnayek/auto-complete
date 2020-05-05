@@ -12,9 +12,9 @@ export class AutoComplete extends Component {
   }
 
   onChange = e => {
-    console.log("onChange");
+    // console.log("onChange");
     const enteredValue = e.currentTarget.value;
-    console.log(enteredValue);
+    // console.log(enteredValue);
 
     const filteredCountries = this.props.countries.filter(
       country =>
@@ -44,7 +44,7 @@ export class AutoComplete extends Component {
     const { filteredCountries, enteredValue, showCountry } = this.state;
     let countryList;
 
-    if (filteredCountries && showCountry) {
+    if (filteredCountries && enteredValue) {
       countryList = (
         <ul className="listContainer">
           {filteredCountries.map(country => {
