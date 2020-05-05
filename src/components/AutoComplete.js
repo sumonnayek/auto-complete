@@ -65,7 +65,7 @@ export class AutoComplete extends Component {
           <input
               ref={this.inputRef}
               onChange={this.onChange}
-              className="search-box1"
+              className="form-control"
               type="text"
               value={enteredValue}/>
           {countryList}
