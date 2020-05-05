@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import {DebounceInput} from 'react-debounce-input';
 export class AutoComplete extends Component {
   constructor(props) {
     super(props);
@@ -12,19 +12,37 @@ export class AutoComplete extends Component {
   }
 
   onChange = e => {
-    // console.log("onChange");
     const enteredValue = e.currentTarget.value;
-    // console.log(enteredValue);
+    let countryList = [];
 
-    const filteredCountries = this.props.countries.filter(
-      country =>
-        country.toLowerCase().indexOf(enteredValue.toLowerCase()) !== -1
-    );
+    if(enteredValue) {
+      fetch(`https://restcountries.eu/rest/v2/name/${enteredValue}`)
+      .then(response => response.json())
+      .then(data => {
+        let countries = data.map( (obj, index)=> {
+          countryList[index] = obj.name;
+          return countryList;
+        })
+        console.log(countries)
+        // const filteredCountries = countries[0].filter(
+        //   country =>
+        //     country.toLowerCase().indexOf(enteredValue.toLowerCase()) !== -1
+        // );
+        this.setState({
+          filteredCountries: countries[0],
+          // enteredValue,
+          showCountry: true
+        });
+        // console.log(filteredCountries)
+      })
+      .catch(console.log);
 
+    }
+    
     this.setState({
-      filteredCountries,
+      // filteredCountries,
       enteredValue,
-      showCountry: true
+      // showCountry: true
     });
   };
 
@@ -32,13 +50,13 @@ export class AutoComplete extends Component {
     this.inputRef.current.focus();
   }
 
-  onClick = (e) => {
+  onClick = e => {
     this.setState({
       enteredValue: e.currentTarget.innerText,
       showCountry: false
-    })
+    });
     // console.log(e.currentTarget.innerText)
-  }
+  };
 
   render() {
     const { filteredCountries, enteredValue, showCountry } = this.state;
@@ -47,8 +65,12 @@ export class AutoComplete extends Component {
     if (filteredCountries && showCountry && enteredValue) {
       countryList = (
         <ul className="listContainer">
-          {filteredCountries.map(country => {
-            return <li key={country} onClick={this.onClick}>{country}</li>;
+          {filteredCountries.map((country, index) => {
+            return (
+              <li key={index} onClick={this.onClick}>
+                {country}
+              </li>
+            );
           })}
         </ul>
       );
