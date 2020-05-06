@@ -10,24 +10,26 @@ export class AutoComplete extends Component {
       showCountry: false,
       enteredValue: ""
     };
-    this.fetchCountries = debounce(this.fetchCountries.bind(), 200);
+    this.fetchCountries = debounce(this.fetchCountries.bind(this), 500);
   }
-
+  
   onChange = e => {
     console.log(e);
     const enteredValue = e.currentTarget.value;
     this.setState(
-      {
-        enteredValue
-      },
-      this.fetchCountries
+        {
+          enteredValue
+        },
+        this.fetchCountries
     );
   };
-
+  
   fetchCountries() {
     const { enteredValue } = this.state;
-    if (enteredValue)
-      fetch(`https://restcountries.eu/rest/v2/name/${enteredValue}`)
+    if (!enteredValue) return;
+    const url = `https://restcountries.eu/rest/v2/name/${enteredValue}`;
+    console.info(url);
+    fetch(url)
         .then(response => response.json())
         .then(data => {
           this.setState({
@@ -37,11 +39,11 @@ export class AutoComplete extends Component {
         })
         .catch(console.log);
   }
-
+  
   componentDidMount() {
     this.inputRef.current.focus();
   }
-
+  
   onClick = e => {
     this.setState({
       enteredValue: e.currentTarget.innerText,
@@ -49,41 +51,41 @@ export class AutoComplete extends Component {
     });
     // console.log(e.currentTarget.innerText)
   };
-
+  
   hideList = () => {
     this.setState({ showCountry: false });
   };
-
+  
   render() {
     const { filteredCountries, enteredValue, showCountry } = this.state;
     let countryList;
-
+    
     if (filteredCountries.length && enteredValue) {
       countryList = (
-        <ul className={`dropdown-menu ${showCountry ? "show" : ""}`}>
-          {filteredCountries.map((country, index) => (
-            <li key={index} onClick={this.onClick} className="dropdown-item">
-              {country}
-            </li>
-          ))}
-        </ul>
+          <ul className={`dropdown-menu ${showCountry ? "show" : ""}`}>
+            {filteredCountries.map((country, index) => (
+                <li key={index} onClick={this.onClick} className="dropdown-item">
+                  {country}
+                </li>
+            ))}
+          </ul>
       );
     }
-
+    
     return (
-      <div className="search-container dropdown">
-        <input
-          ref={this.inputRef}
-          // onChange={this.debounceEvent(this.onChange)}
-          onChange={this.onChange}
-          // onChange={e => this.onChange(e.currentTarget.value)}
-          className="form-control"
-          type="text"
-          value={enteredValue}
-          onBlur={this.hideList}
-        />
-        {countryList}
-      </div>
+        <div className="search-container dropdown">
+          <input
+              ref={this.inputRef}
+              // onChange={this.debounceEvent(this.onChange)}
+              onChange={this.onChange}
+              // onChange={e => this.onChange(e.currentTarget.value)}
+              className="form-control"
+              type="text"
+              value={enteredValue}
+              onBlur={this.hideList}
+          />
+          {countryList}
+        </div>
     );
   }
 }
