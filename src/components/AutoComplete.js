@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { debounce } from "lodash";
+
 export class AutoComplete extends Component {
   constructor(props) {
     super(props);
@@ -6,36 +8,40 @@ export class AutoComplete extends Component {
     this.state = {
       filteredCountries: [],
       showCountry: false,
-      enteredValue: ''
+      enteredValue: ""
     };
+    this.fetchCountries = debounce(this.fetchCountries.bind(), 200);
   }
-  
+
   onChange = e => {
+    console.log(e);
     const enteredValue = e.currentTarget.value;
-    if(enteredValue) {
-      fetch(`https://restcountries.eu/rest/v2/name/${enteredValue}`)
-          .then(response => response.json())
-          .then(data => {
-            this.setState({
-              filteredCountries: data.map(obj => obj.name),
-              showCountry: true
-            });
-          })
-          .catch(console.log);
-      
-    }
-    
-    this.setState({
-      // filteredCountries,
-      enteredValue,
-      // showCountry: true
-    });
+    this.setState(
+      {
+        enteredValue
+      },
+      this.fetchCountries
+    );
   };
-  
+
+  fetchCountries() {
+    const { enteredValue } = this.state;
+    if (enteredValue)
+      fetch(`https://restcountries.eu/rest/v2/name/${enteredValue}`)
+        .then(response => response.json())
+        .then(data => {
+          this.setState({
+            filteredCountries: data.map(obj => obj.name),
+            showCountry: true
+          });
+        })
+        .catch(console.log);
+  }
+
   componentDidMount() {
     this.inputRef.current.focus();
   }
-  
+
   onClick = e => {
     this.setState({
       enteredValue: e.currentTarget.innerText,
@@ -43,34 +49,41 @@ export class AutoComplete extends Component {
     });
     // console.log(e.currentTarget.innerText)
   };
-  
+
   hideList = () => {
-    this.setState({showCountry: false});
+    this.setState({ showCountry: false });
   };
-  
+
   render() {
     const { filteredCountries, enteredValue, showCountry } = this.state;
     let countryList;
-    
+
     if (filteredCountries.length && enteredValue) {
       countryList = (
-          <ul className={`dropdown-menu ${showCountry ? 'show' : ''}`}>
-            {filteredCountries.map((country, index) => <li key={index} onClick={this.onClick} className="dropdown-item">{country}</li>)}
-          </ul>
+        <ul className={`dropdown-menu ${showCountry ? "show" : ""}`}>
+          {filteredCountries.map((country, index) => (
+            <li key={index} onClick={this.onClick} className="dropdown-item">
+              {country}
+            </li>
+          ))}
+        </ul>
       );
     }
-    
+
     return (
-        <div className="search-container dropdown">
-          <input
-              ref={this.inputRef}
-              onChange={this.onChange}
-              className="form-control"
-              type="text"
-              value={enteredValue}
-              onBlur={this.hideList}/>
-          {countryList}
-        </div>
+      <div className="search-container dropdown">
+        <input
+          ref={this.inputRef}
+          // onChange={this.debounceEvent(this.onChange)}
+          onChange={this.onChange}
+          // onChange={e => this.onChange(e.currentTarget.value)}
+          className="form-control"
+          type="text"
+          value={enteredValue}
+          onBlur={this.hideList}
+        />
+        {countryList}
+      </div>
     );
   }
 }
