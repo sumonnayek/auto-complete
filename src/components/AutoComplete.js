@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { debounce } from "lodash";
 
+var classNames = require("classnames");
+
 export class AutoComplete extends Component {
   constructor(props) {
     super(props);
@@ -12,38 +14,38 @@ export class AutoComplete extends Component {
     };
     this.fetchCountries = debounce(this.fetchCountries.bind(this), 500);
   }
-  
+
   onChange = e => {
     console.log(e);
     const enteredValue = e.currentTarget.value;
     this.setState(
-        {
-          enteredValue
-        },
-        this.fetchCountries
+      {
+        enteredValue
+      },
+      this.fetchCountries
     );
   };
-  
+
   fetchCountries() {
     const { enteredValue } = this.state;
     if (!enteredValue) return;
     const url = `https://restcountries.eu/rest/v2/name/${enteredValue}`;
     console.info(url);
     fetch(url)
-        .then(response => response.json())
-        .then(data => {
-          this.setState({
-            filteredCountries: data.map(obj => obj.name),
-            showCountry: true
-          });
-        })
-        .catch(console.log);
+      .then(response => response.json())
+      .then(data => {
+        this.setState({
+          filteredCountries: data.map(obj => obj.name),
+          showCountry: true
+        });
+      })
+      .catch(console.log);
   }
-  
+
   componentDidMount() {
     this.inputRef.current.focus();
   }
-  
+
   onClick = e => {
     this.setState({
       enteredValue: e.currentTarget.innerText,
@@ -51,41 +53,42 @@ export class AutoComplete extends Component {
     });
     // console.log(e.currentTarget.innerText)
   };
-  
+
   hideList = () => {
     this.setState({ showCountry: false });
   };
-  
+
   render() {
     const { filteredCountries, enteredValue, showCountry } = this.state;
     let countryList;
-    
+    let listClass = classNames(`dropdown-menu ${showCountry ? "show" : ""}`);
+
     if (filteredCountries.length && enteredValue) {
       countryList = (
-          <ul className={`dropdown-menu ${showCountry ? "show" : ""}`}>
-            {filteredCountries.map((country, index) => (
-                <li key={index} onClick={this.onClick} className="dropdown-item">
-                  {country}
-                </li>
-            ))}
-          </ul>
+        <ul className={listClass}>
+          {filteredCountries.map((country, index) => (
+            <li key={index} onClick={this.onClick} className="dropdown-item">
+              {country}
+            </li>
+          ))}
+        </ul>
       );
     }
-    
+
     return (
-        <div className="search-container dropdown">
-          <input
-              ref={this.inputRef}
-              // onChange={this.debounceEvent(this.onChange)}
-              onChange={this.onChange}
-              // onChange={e => this.onChange(e.currentTarget.value)}
-              className="form-control"
-              type="text"
-              value={enteredValue}
-              onBlur={this.hideList}
-          />
-          {countryList}
-        </div>
+      <div className="search-container dropdown">
+        <input
+          ref={this.inputRef}
+          // onChange={this.debounceEvent(this.onChange)}
+          onChange={this.onChange}
+          // onChange={e => this.onChange(e.currentTarget.value)}
+          className="form-control"
+          type="text"
+          value={enteredValue}
+          onBlur={this.hideList}
+        />
+        {countryList}
+      </div>
     );
   }
 }
