@@ -20,6 +20,7 @@ export class AutoComplete extends Component {
     const enteredValue = e.currentTarget.value;
     this.setState(
       {
+        filteredCountries:'',
         enteredValue
       },
       this.fetchCountries
