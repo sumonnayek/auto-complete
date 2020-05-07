@@ -54,6 +54,12 @@ export class AutoComplete extends Component {
     // console.log(e.currentTarget.innerText)
   };
 
+  eraseData = () => {
+      this.setState({
+          enteredValue: ''
+      })
+  }
+
   hideList = () => {
     this.setState({ showCountry: false });
   };
@@ -87,6 +93,7 @@ export class AutoComplete extends Component {
           value={enteredValue}
           onBlur={this.hideList}
         />
+        <button className='eraseButton' onClick={this.eraseData}>X</button>
         {countryList}
       </div>
     );
