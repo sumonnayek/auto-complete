@@ -68,7 +68,7 @@ export class AutoComplete extends Component {
   render() {
     const { filteredCountries, enteredValue, showCountry } = this.state;
     let countryList;
-    let listClass = classNames(`dropdown-menu ${showCountry ? "show" : ""}`);
+    let listClass = classNames('dropdown-menu',  {'show' : showCountry});
 
     if (filteredCountries.length && enteredValue) {
       countryList = (
