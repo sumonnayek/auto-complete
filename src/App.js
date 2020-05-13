@@ -2,6 +2,7 @@ import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import AutoComplete from "./components/AutoComplete";
+import AutoComplete1 from "./components/AutoComplete1";
 
 function App() {
   let countries = [
@@ -18,7 +19,7 @@ function App() {
   ];
   return (
     <div className="App">
-      <AutoComplete
+      <AutoComplete1
         countries={countries}
       />
     </div>
