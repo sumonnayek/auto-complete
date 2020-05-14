@@ -19,7 +19,7 @@ function App() {
   ];
   return (
     <div className="App">
-      <AutoComplete1
+      <AutoComplete
         countries={countries}
       />
     </div>
